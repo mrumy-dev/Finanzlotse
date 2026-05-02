@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: finanzlotse-config
+data:
+  DB_NAME: finanzlotse
+  DB_USER: finanzlotse
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  PREDICTION_SERVICE_URL: http://prediction-service:8000
+  MOCK_BANKING_API_URL: http://mock-banking-api:8080

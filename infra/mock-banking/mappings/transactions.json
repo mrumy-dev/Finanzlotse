@@ -1,0 +1,42 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/accounts/demo/transactions"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "accountId": "demo",
+      "currency": "CHF",
+      "transactions": [
+        {
+          "id": "bank-2026-05-001",
+          "bookedAt": "2026-05-02",
+          "merchant": "Migros",
+          "description": "Weekly shopping",
+          "amount": "-42.80",
+          "currency": "CHF"
+        },
+        {
+          "id": "bank-2026-05-002",
+          "bookedAt": "2026-05-01",
+          "merchant": "SBB",
+          "description": "Train ticket",
+          "amount": "-7.20",
+          "currency": "CHF"
+        },
+        {
+          "id": "bank-2026-04-099",
+          "bookedAt": "2026-04-30",
+          "merchant": "Payroll",
+          "description": "Monthly salary",
+          "amount": "4200.00",
+          "currency": "CHF"
+        }
+      ]
+    }
+  }
+}

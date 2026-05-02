@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mock-banking-mappings
+data:
+  transactions.json: |
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/accounts/demo/transactions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "accountId": "demo",
+          "currency": "CHF",
+          "transactions": [
+            {
+              "id": "bank-2026-05-001",
+              "bookedAt": "2026-05-02",
+              "merchant": "Migros",
+              "description": "Weekly shopping",
+              "amount": "-42.80",
+              "currency": "CHF"
+            },
+            {
+              "id": "bank-2026-05-002",
+              "bookedAt": "2026-05-01",
+              "merchant": "SBB",
+              "description": "Train ticket",
+              "amount": "-7.20",
+              "currency": "CHF"
+            }
+          ]
+        }
+      }
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mock-banking-api
+spec:
+  selector:
+    app: mock-banking-api
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mock-banking-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mock-banking-api
+  template:
+    metadata:
+      labels:
+        app: mock-banking-api
+    spec:
+      containers:
+        - name: mock-banking-api
+          image: wiremock/wiremock:3.9.2
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: mappings
+              mountPath: /home/wiremock/mappings/transactions.json
+              subPath: transactions.json
+      volumes:
+        - name: mappings
+          configMap:
+            name: mock-banking-mappings

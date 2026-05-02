@@ -28,7 +28,7 @@ This project is scoped for a third year Informatiker HF portfolio project: reali
 - Deployment: Kubernetes manifests
 - APIs: exchange-rate API and mock banking API
 
-## Planned Repository Layout
+## Repository Layout
 
 ```text
 .
@@ -41,6 +41,37 @@ This project is scoped for a third year Informatiker HF portfolio project: reali
 └── docs/                # Project plan, architecture notes, Git workflow
 ```
 
+## Local Development
+
+Run the full local stack with Docker Compose:
+
+```bash
+docker compose --env-file .env.example -f infra/docker-compose/docker-compose.yml up --build
+```
+
+Services:
+
+- Frontend: `http://localhost:4200`
+- Backend: `http://localhost:8080`
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- Prediction service: `http://localhost:8000`
+- Mock banking API: `http://localhost:9090/accounts/demo/transactions`
+- PostgreSQL: `localhost:5432`
+
+Run backend tests:
+
+```bash
+mvn -f backend/pom.xml test
+```
+
+Run prediction service tests after installing the Python test dependencies:
+
+```bash
+cd prediction-service
+pip install -e ".[test]"
+pytest
+```
+
 ## Employer Signal
 
 The project demonstrates typical business application work: CRUD APIs, data modeling, authentication, reporting, background jobs, CSV import, API integrations, test coverage, and deployment basics.
@@ -49,4 +80,3 @@ The project demonstrates typical business application work: CRUD APIs, data mode
 
 - [Project Plan](docs/project-plan.md)
 - [Git Workflow](docs/git-workflow.md)
-

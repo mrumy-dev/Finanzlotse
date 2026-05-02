@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: finanzlotse-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-finanzlotse}
+      POSTGRES_USER: ${DB_USER:-finanzlotse}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-finanzlotse}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-finanzlotse} -d ${DB_NAME:-finanzlotse}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../../backend
+    container_name: finanzlotse-backend
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-finanzlotse}
+      DB_USER: ${DB_USER:-finanzlotse}
+      DB_PASSWORD: ${DB_PASSWORD:-finanzlotse}
+      PREDICTION_SERVICE_URL: http://prediction-service:8000
+      MOCK_BANKING_API_URL: http://mock-banking-api:8080
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      prediction-service:
+        condition: service_started
+      mock-banking-api:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ../../frontend
+    container_name: finanzlotse-frontend
+    ports:
+      - "${FRONTEND_PORT:-4200}:80"
+    depends_on:
+      - backend
+
+  prediction-service:
+    build:
+      context: ../../prediction-service
+    container_name: finanzlotse-prediction-service
+    ports:
+      - "${PREDICTION_SERVICE_PORT:-8000}:8000"
+
+  mock-banking-api:
+    image: wiremock/wiremock:3.9.2
+    container_name: finanzlotse-mock-banking-api
+    ports:
+      - "${MOCK_BANKING_PORT:-9090}:8080"
+    volumes:
+      - ../mock-banking:/home/wiremock
+
+volumes:
+  postgres-data:
