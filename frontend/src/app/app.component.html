@@ -1,0 +1,111 @@
+<main class="shell">
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Finanzlotse</p>
+      <h1>Dashboard</h1>
+    </div>
+    <div class="actions">
+      <button type="button" class="icon-button" title="Refresh data" aria-label="Refresh data">
+        &#8635;
+      </button>
+      <button type="button" class="primary-action">
+        CSV import
+      </button>
+    </div>
+  </header>
+
+  <section class="summary-grid" aria-label="Monthly summary">
+    <article class="summary-card" *ngFor="let card of summaryCards" [class.warning]="card.tone === 'warning'" [class.good]="card.tone === 'good'">
+      <span>{{ card.label }}</span>
+      <strong>{{ card.value }}</strong>
+      <small>{{ card.detail }}</small>
+    </article>
+  </section>
+
+  <section class="dashboard-grid">
+    <section class="panel spending-panel" aria-labelledby="spending-title">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">May 2026</p>
+          <h2 id="spending-title">Category Spend</h2>
+        </div>
+        <select aria-label="Report month">
+          <option>May 2026</option>
+          <option>April 2026</option>
+          <option>March 2026</option>
+        </select>
+      </div>
+
+      <div class="spending-list">
+        <div class="spending-row" *ngFor="let category of categorySpending">
+          <div class="row-label">
+            <span>{{ category.name }}</span>
+            <small>{{ formatCurrency(category.amount) }} / {{ formatCurrency(category.budget) }}</small>
+          </div>
+          <div class="bar-track" aria-hidden="true">
+            <div class="bar-fill" [style.width.%]="category.percent"></div>
+          </div>
+          <strong>{{ category.percent }}%</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="warnings-title">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Budget</p>
+          <h2 id="warnings-title">Warnings</h2>
+        </div>
+      </div>
+
+      <article class="warning-item" *ngFor="let warning of warnings">
+        <div>
+          <strong>{{ warning.category }}</strong>
+          <p>{{ warning.message }}</p>
+        </div>
+        <span>{{ warning.percent }}%</span>
+      </article>
+    </section>
+
+    <section class="panel" aria-labelledby="subscriptions-title">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Recurring</p>
+          <h2 id="subscriptions-title">Subscriptions</h2>
+        </div>
+      </div>
+
+      <article class="subscription-item" *ngFor="let subscription of subscriptions">
+        <div>
+          <strong>{{ subscription.merchant }}</strong>
+          <small>Due in {{ subscription.dueInDays }} days</small>
+        </div>
+        <span>{{ formatCurrency(subscription.amount) }}</span>
+      </article>
+    </section>
+
+    <section class="panel transactions-panel" aria-labelledby="transactions-title">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Ledger</p>
+          <h2 id="transactions-title">Recent Transactions</h2>
+        </div>
+      </div>
+
+      <div class="transaction-table">
+        <div class="transaction-row header">
+          <span>Date</span>
+          <span>Merchant</span>
+          <span>Category</span>
+          <span>Amount</span>
+        </div>
+        <div class="transaction-row" *ngFor="let transaction of recentTransactions">
+          <span>{{ transaction.date }}</span>
+          <span>{{ transaction.merchant }}</span>
+          <span>{{ transaction.category }}</span>
+          <strong [class.income]="transaction.amount > 0">{{ formatCurrency(transaction.amount) }}</strong>
+        </div>
+      </div>
+    </section>
+  </section>
+</main>
