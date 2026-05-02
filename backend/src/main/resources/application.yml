@@ -1,0 +1,23 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: finanzlotse-backend
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:finanzlotse}
+    username: ${DB_USER:finanzlotse}
+    password: ${DB_PASSWORD:finanzlotse}
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

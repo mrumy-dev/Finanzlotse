@@ -1,0 +1,34 @@
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.iml
+
+# Java / Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Local configuration
+.env
+*.local
+
+# Logs
+*.log
